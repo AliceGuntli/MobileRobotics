@@ -3,6 +3,7 @@
 #Importations
 import cv2
 import numpy as np
+import pyvisgraph as vg
 from tools import *
 from start_and_goal import start_goal
 from obstacles_detection import *
@@ -14,7 +15,7 @@ img = load()
 cv2.imshow("Original image", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-start, goal = start_goal(img)
+start, goal, front = start_goal(img)
 corners = corner_detection(img)
 
 #Check that Thymio is not is the list of corners of obstacles
@@ -42,3 +43,16 @@ possible_obstacles = draw_lines(img, corners)
 obstacles = real_obstacles(possible_obstacles)
 print("obstacles")
 print(obstacles)
+
+#Graph shortest path
+polys = []
+start_vg = vg.Point(start[0], start[1])
+goal_vg = vg.Point(goal[0], goal[1])
+for i in range(len(obstacles)) :
+		polys.append([vg.Point(obstacles[i][0], obstacles[i][1]), vg.Point(obstacles[i][2], obstacles[i][3]), vg.Point(obstacles[i][4], obstacles[i][5]), vg.Point(obstacles[i][6], obstacles[i][7])])
+
+g = vg.VisGraph()
+g.build(polys)
+shortest = g.shortest_path(start_vg, goal_vg)
+
+print(shortest)

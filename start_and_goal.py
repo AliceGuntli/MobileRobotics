@@ -2,6 +2,7 @@
 
 #Importations
 import cv2
+import numpy as np
 
 #Function
 def start_goal(img):
@@ -40,14 +41,44 @@ def start_goal(img):
 				start = [cX, cY]
 				cv2.rectangle(output, (x, y), (x + w, y + h), (255, 0, 0), 3)
 				cv2.circle(output, (int(cX), int(cY)), 4, (255, 0, 0), -1)
-				cv2.circle(output, (int(x), int(y)), 10, (0, 255, 0), -1)
+				#cv2.circle(output, (int(x+w), int(y+h)), 10, (0, 255, 0), -1)
+				p1 = np.array((x,y))
+				p2 = np.array((x+w,y))
+				p3 = np.array((x,y+h))
+				p4 = np.array((x+w,y+h))
+				start_np = np.array((cX, cY))
+
+				front = []
+				front.append(p1[0])
+				front.append(p1[1])
+				print("front", front)
+				dist = np.linalg.norm(start_np-p1)
+				
+				if np.linalg.norm(start_np-p2) < dist :
+					front[0] = p2[0]
+					front[1] = p2[1]
+					dist = np.linalg.norm(start_np-p2)
+				
+				if np.linalg.norm(start_np-p3) < dist :
+					front[0] = p3[0]
+					front[1] = p3[1]
+					dist = np.linalg.norm(start_np-p3)
+					
+				if np.linalg.norm(start_np-p4) < dist :
+					front[0] = p4[0]
+					front[1] = p4[1]
+					dist = np.linalg.norm(start_np-p4)
+				
+				print("front", front)
+				x1 = front[0]
+				y1 = front[1]
+				cv2.circle(output, (x1,y1), 8, (0, 0, 255), -1)
 			
 			#Detect the goal from its area
 			if ((area < 1900) and (area > 1700)):
 				goal = [cX, cY]
 				cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
 				cv2.circle(output, (int(cX), int(cY)), 4, (0, 255, 0), -1)
-				cv2.circle(output, (int(x), int(y)), 10, (255, 0, 0), -1)
 	
 	# show our output image and connected component mask
 	cv2.imshow("Output", output)
@@ -59,6 +90,6 @@ def start_goal(img):
 	goal[0] = int(goal[0])
 	goal[1] = int(goal[1])
 
-	return start, goal
+	return start, goal, front
 
 
