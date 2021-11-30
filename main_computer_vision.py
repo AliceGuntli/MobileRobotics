@@ -3,9 +3,11 @@
 #Importations
 import cv2
 import numpy as np
-from tools import load
+from tools import *
 from start_and_goal import start_goal
-from obstacles_detection import corner_detection
+from obstacles_detection import *
+from intersection import *
+
 
 #Main
 img = load()
@@ -33,4 +35,10 @@ cv2.destroyAllWindows()
 
 print("Start", start)
 print("Goal", goal)
-print("Corners of the obstacles", corners)
+#print("Corners of the obstacles", corners)
+
+possible_obstacles = draw_lines(img, corners)
+#print(possible_obstacles)
+obstacles = real_obstacles(possible_obstacles)
+print("obstacles")
+print(obstacles)
