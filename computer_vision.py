@@ -19,7 +19,7 @@ from ipywidgets import widgets
 #Take a picture with the camera and save it under the name "frame.jpg"
 def take_frame():
 	# 1.creating a video object
-	video = cv2.VideoCapture(0) 
+	video = cv2.VideoCapture(1) 
 	# 2. Variable
 	a = 0
 	# 3. While loop
@@ -101,7 +101,8 @@ def corner_detection(img):
 
 	
 #Main
-img = load()
+take_frame()
+#img = load()
 #corners = corner_detection(img)
 
 #List containing the coordinates of the corners - To use it later
@@ -109,7 +110,7 @@ img = load()
 #print(len(corners))
 
 #Detection of triangle
-coordinates_triangle = triangle_detection(img);
-print(coordinates_triangle)
+#coordinates_triangle = triangle_detection(img);
+#print(coordinates_triangle)
 
 #To do : just add a certain value to the corners to grow the obstacles

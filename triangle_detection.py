@@ -18,7 +18,7 @@ from ipywidgets import widgets
 
 #Load an image
 def load():
-	img = cv2.imread('images/frame.jpg', cv2.IMREAD_COLOR)
+	img = cv2.imread('frame.jpg', cv2.IMREAD_COLOR)
 	#img = cv2.imread('frame.jpg', cv2.IMREAD_COLOR)
 	# If the image path is wrong, the resulting img will be none
 	if img is None:
@@ -65,6 +65,7 @@ thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 output = cv2.connectedComponentsWithStats(thresh, connectivity=4, ltype=cv2.CV_32S)
 (numLabels, labels, stats, centroids) = output
 
+
 # loop over the number of unique connected component labels
 for i in range(0, numLabels):
 	# if this is the first component then we examine the
@@ -91,23 +92,29 @@ for i in range(0, numLabels):
 	print(h)
 	print(area)
 	
+	output = img.copy()
+	
 	# ensure the width, height, and area are all neither too small
 	# nor too big
-	#keepWidth = w > 5 and w < 50
-	#keepHeight = h > 45 and h < 65
-	#keepArea = area > 140 and area < 150 #way to identify the goal and the start ! 
+	keepWidth = w > 10 and w < 500
+	keepHeight = h > 10 and h < 500
+	keepArea = area > 400  #way to identify the goal and the start ! 
 	
 	# ensure the connected component we are examining passes all
 	# three tests
-	if 1:
-
-		output = img.copy()
-		cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
+	if all((keepWidth,keepHeight, keepArea)):
+		cv2.rectangle(output, (x, y), (x + w, y + h), (0, 0, 255), 3)
 		cv2.circle(output, (int(cX), int(cY)), 4, (0, 0, 255), -1)
 
-		# construct a mask for the current connected component by
-		# finding a pixels in the labels array that have the current
-		# connected component ID
+		if ((area < 600) and (area > 500)):
+			start = [(cX, cY)]
+			cv2.rectangle(output, (x, y), (x + w, y + h), (255, 0, 0), 3)
+			cv2.circle(output, (int(cX), int(cY)), 4, (255, 0, 0), -1)
+		if ((area < 1900) and (area > 1700)):
+			goal = [(cX, cY)]
+			cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
+			cv2.circle(output, (int(cX), int(cY)), 4, (0, 255, 0), -1)
+
 		# show our output image and connected component mask
 		cv2.imshow("Output", output)
 		cv2.waitKey(0)
