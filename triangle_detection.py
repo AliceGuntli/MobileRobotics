@@ -5,7 +5,7 @@ import cv2
 import time
 
 import numpy as np
-
+#import imutils
 
 import matplotlib.pyplot as plt
 
@@ -41,13 +41,15 @@ def triangle_detection(img):
 	thresh = cv2.adaptiveThreshold(blur, 255, 1, 1, 11, 2)
 
 	# Now finding Contours         ###################
-	contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)  
-	coordinates = []
-	for cnt in contours:
+	cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	#cnts = imutils.grab_contours(cnts)
+	for cnt in cnts:
 		# [point_x, point_y, width, height] = cv2.boundingRect(cnt)
-		approx = cv2.approxPolyDP(
-			cnt, 0.07 * cv2.arcLength(cnt, True), True)
+		#approx = cv2.approxPolyDP(cnt, 0.07 * cv2.arcLength(cnt, True), True)
+		peri = cv2.arcLength(cnt, True)
+		approx = cv2.approxPolyDP(cnt, 0.04 * peri, True)
 		if len(approx) == 3:
+			print("Triangle")
 			coordinates.append([cnt])
 			cv2.drawContours(img, [cnt], 0, (0, 0, 255), 3)
 
@@ -120,6 +122,6 @@ for i in range(0, numLabels):
 		cv2.waitKey(0)
 
 #Detection of triangle
-#coordinates_triangle = triangle_detection(img);
-#print(coordinates_triangle)
+coordinates_triangle = triangle_detection(img);
+print(coordinates_triangle)
 

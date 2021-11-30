@@ -1,6 +1,6 @@
 #Main of computer vision
 
-#Importations
+#Importations of librairies
 import cv2
 import numpy as np
 import pyvisgraph as vg
@@ -15,8 +15,9 @@ img = load()
 cv2.imshow("Original image", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-start, goal, front = start_goal(img)
 corners = corner_detection(img)
+start, goal, front = start_goal(img)
+
 
 #Check that Thymio is not is the list of corners of obstacles
 #If it is, remove it

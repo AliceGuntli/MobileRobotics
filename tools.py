@@ -117,3 +117,4 @@ def doIntersect(p1,q1,p2,q2):
     # If none of the cases
     return False
 
+#take_frame()
