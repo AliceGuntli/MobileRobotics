@@ -22,10 +22,16 @@ start, goal, front = start_goal(img)
 #Check that Thymio is not is the list of corners of obstacles
 #If it is, remove it
 thymio = np.array((start[0], start[1]))
-for i in range(len(corners)-1) :
-	if (np.linalg.norm(thymio-corners[i,:]) < 55) :
-		corners = np.delete(corners, i, 0)
+to_be_del = []
 
+for i in range(len(corners)) :
+	if (np.linalg.norm(thymio-corners[i,:,:]) < 45) :
+		to_be_del.append(i)
+
+to_be_del.sort(reverse = True)
+for i in to_be_del :
+		corners = np.delete(corners, i, 0)
+		
 output = img.copy()
 for i in corners:
 		x,y = i.ravel()
@@ -57,3 +63,11 @@ g.build(polys)
 shortest = g.shortest_path(start_vg, goal_vg)
 
 print(shortest)
+
+path = img.copy()
+for point in shortest :
+	cv2.circle(path,(int(point.x),int(point.y)),5,(0,0,255),-1)
+	
+cv2.imshow("Path", path)
+cv2.waitKey(0)
+cv2.destroyAllWindows()

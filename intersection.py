@@ -31,7 +31,7 @@ def draw_lines(img, corners) :
 	img2 = img.copy()
 	img2_gray = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
 	possible_obstacles = []
-	free_path = []
+	#free_path = []
 
 	for i in range (0,len(corners)) :
 		for j in range(i+1, len(corners)) :
@@ -41,18 +41,18 @@ def draw_lines(img, corners) :
 				red, green = compute_line(x1,y1,x2,y2,img2)
 				if red > 48 :
 					possible_obstacles.append([x1,y1,x2,y2])
-				if green < 40 :
-					free_path.append([x1,y1,x2,y2])
+				#if green < 40 :
+					#free_path.append([x1,y1,x2,y2])
 
                 
 	#print("Obstacles ", possible_obstacles)
 	#print("Free path", free_path)
 
 	#Show the result
-	img2S = cv2.resize(img2, (w,h))
-	cv2.imshow("Line between two points", img2S)
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
+	#img2S = cv2.resize(img2, (w,h))
+	#cv2.imshow("Line between two points", img2S)
+	#cv2.waitKey(0)
+	#cv2.destroyAllWindows()
 	return possible_obstacles
 
 #Draw lines that are obstacles

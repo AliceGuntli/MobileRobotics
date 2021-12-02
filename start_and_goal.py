@@ -16,6 +16,7 @@ def start_goal(img):
 	output = img.copy()
 
 	# loop over the number of unique connected component labels
+	thymio = []
 	for i in range(0, numLabels):
 		# extract the connected component statistics and centroid for
 		# the current label
@@ -36,56 +37,41 @@ def start_goal(img):
 		# three tests
 		if all((keepWidth,keepHeight, keepArea)):
 			
-			#Detect the start from its area
-			if ((area < 500) and (area > 450)):
-				start = [cX, cY]
-				cv2.rectangle(output, (x, y), (x + w, y + h), (255, 0, 0), 3)
-				cv2.circle(output, (int(cX), int(cY)), 4, (255, 0, 0), -1)
-				#cv2.circle(output, (int(x+w), int(y+h)), 10, (0, 255, 0), -1)
-				p1 = np.array((x,y))
-				p2 = np.array((x+w,y))
-				p3 = np.array((x,y+h))
-				p4 = np.array((x+w,y+h))
-				start_np = np.array((cX, cY))
+			#Detect the two triangles representing the thymio from their area
+			if ((area < 650) and (area > 500)):
+				thymio.append(int(cX))
+				thymio.append(int(cY))
+				#cv2.rectangle(output, (x, y), (x + w, y + h), (255, 0, 0), 3)
+				#cv2.circle(output, (int(cX), int(cY)), 4, (255, 0, 0), -1)
 
-				front = []
-				front.append(p1[0])
-				front.append(p1[1])
-				print("front", front)
-				dist = np.linalg.norm(start_np-p1)
-				
-				if np.linalg.norm(start_np-p2) < dist :
-					front[0] = p2[0]
-					front[1] = p2[1]
-					dist = np.linalg.norm(start_np-p2)
-				
-				if np.linalg.norm(start_np-p3) < dist :
-					front[0] = p3[0]
-					front[1] = p3[1]
-					dist = np.linalg.norm(start_np-p3)
-					
-				if np.linalg.norm(start_np-p4) < dist :
-					front[0] = p4[0]
-					front[1] = p4[1]
-					dist = np.linalg.norm(start_np-p4)
-				
-				print("front", front)
-				x1 = front[0]
-				y1 = front[1]
-				cv2.circle(output, (x1,y1), 8, (0, 0, 255), -1)
 			
 			#Detect the goal from its area
-			if ((area < 1900) and (area > 1700)):
+			if ((area < 1900) and (area > 1400)):
 				goal = [cX, cY]
-				cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
+				#cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
 				cv2.circle(output, (int(cX), int(cY)), 4, (0, 255, 0), -1)
+	
+	#Start (Thymio) as the mean of the two triangles
+	start = []
+	start.append(int((thymio[0]+thymio[2])/2))
+	start.append(int((thymio[1]+thymio[3])/2))
+	cv2.circle(output, (start[0], start[1]), 8, (255, 0, 0), -1)
+	
+	#Front with the value of the pixel
+	if gray[thymio[1], thymio[0]] > gray[thymio[3], thymio[2]] :
+		front = [thymio[2], thymio[3]]
+	else :
+		front = [thymio[0], thymio[1]]
+	
+
+	cv2.circle(output, (front[0], front[1]), 6, (0, 0, 255), -1)
 	
 	# show our output image and connected component mask
 	cv2.imshow("Output", output)
 	cv2.waitKey(0)
 	
-	start[0] = int(start[0])
-	start[1] = int(start[1])
+	#start[0] = int(start[0])
+	#start[1] = int(start[1])
 
 	goal[0] = int(goal[0])
 	goal[1] = int(goal[1])

@@ -93,6 +93,7 @@ for i in range(0, numLabels):
 	print(w)
 	print(h)
 	print(area)
+	print(gray[int(cY), int(cX)])
 	
 	output = img.copy()
 	
@@ -112,7 +113,7 @@ for i in range(0, numLabels):
 			start = [(cX, cY)]
 			cv2.rectangle(output, (x, y), (x + w, y + h), (255, 0, 0), 3)
 			cv2.circle(output, (int(cX), int(cY)), 4, (255, 0, 0), -1)
-		if ((area < 1900) and (area > 1700)):
+		if ((area < 1850) and (area > 1700)):
 			goal = [(cX, cY)]
 			cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
 			cv2.circle(output, (int(cX), int(cY)), 4, (0, 255, 0), -1)
@@ -122,6 +123,6 @@ for i in range(0, numLabels):
 		cv2.waitKey(0)
 
 #Detection of triangle
-coordinates_triangle = triangle_detection(img);
-print(coordinates_triangle)
+#coordinates_triangle = triangle_detection(img);
+#print(coordinates_triangle)
 
