@@ -4,6 +4,9 @@ import cv2
 import numpy as np
 from tools import *
 
+#Define constants
+THYMIO_SIZE = 110
+
 #Function to compute line between the corners and with the color depending on the value of the pixels 
 def compute_line(x1,y1, x2, y2, img) :
     img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -97,4 +100,36 @@ def real_obstacles(possible_obstacles) :
 					element = possible_obstacles[i] + possible_obstacles[j] 
 					obstacles.append(element)
 
-	return obstacles      
+	return obstacles     
+
+def obs_augmentation(img, obstacles):
+	for i in range (0,len(obstacles)//4):
+		x1 = obstacles[i]
+		y1 = obstacles[i+1]
+		x2 = obstacles[i+2]
+		y2 = obstacles[i+3]
+		print('Looking at Corner ', i )
+		if x1 > x2:
+			obstacles[i] = np.minimum(obstacles[i] + THYMIO_SIZE, img.shape[1]) #augment x1
+			obstacles[i+2] = np.maximum(obstacles[i+2] - THYMIO_SIZE, 0) #decreases x2
+		else:
+			obstacles[i] = np.maximum(obstacles[i] - THYMIO_SIZE, 0) #decreases x1
+			obstacles[i+2] = np.minimum(obstacles[i+2] + THYMIO_SIZE, img.shape[1]) #augment x2
+		if y1 > y2:
+			obstacles[i+1] = np.minimum(obstacles[i+1] + THYMIO_SIZE, img.shape[0])
+			obstacles[i+3] = np.maximum(obstacles[i+3] - THYMIO_SIZE, 0)
+		else:
+			obstacles[i+1] = np.maximum(obstacles[i+1] - THYMIO_SIZE, 0)
+			obstacles[i+3] = np.minimum(obstacles[i+3] + THYMIO_SIZE, img.shape[0])
+		x1 = obstacles[i]
+		y1 = obstacles[i+1]
+		x2 = obstacles[i+2]
+		y2 = obstacles[i+3]
+
+	print(obstacles)
+	red, green = compute_line(x1,y1,x2,y2,img)
+	cv2.imshow("Draw only lines that are obstacles", img)
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()
+
+	return obstacles

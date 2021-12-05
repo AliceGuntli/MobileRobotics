@@ -38,10 +38,11 @@ output = img.copy()
 for i in corners:
 		x,y = i.ravel()
 		cv2.circle(output,(x,y),5,(0,0,255),-1)
-		
+
+#plt.imshow(output)
 cv2.imshow("Only corners of obstacles", output)
 cv2.waitKey(0)
-cv2.destroyAllWindows()	
+cv2.destroyAllWindows()
 
 #Some print for check
 #print("Start", start)
