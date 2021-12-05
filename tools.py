@@ -6,7 +6,7 @@ import cv2
 #Take picture with camera
 def take_frame():
 	# 1.creating a video object
-	video = cv2.VideoCapture(1) 
+	video = cv2.VideoCapture(0) 
 	# 2. Variable
 	a = 0
 	# 3. While loop
@@ -31,6 +31,7 @@ def take_frame():
 	
 #Load an image
 def load():
+	take_frame()
 	img = cv2.imread('frame.jpg', cv2.IMREAD_COLOR)
 	#img = cv2.imread('frame.jpg', cv2.IMREAD_COLOR)
 	# If the image path is wrong, the resulting img will be none

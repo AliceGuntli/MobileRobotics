@@ -14,7 +14,7 @@ def compute_line(x1,y1, x2, y2, img) :
     pt_b = np.array([x2, y2])
     count_red = 0
     count_green = 0
-    for p in np.linspace(pt_a, pt_b, 50):
+    for p in np.linspace(pt_a, pt_b, 1000):
         x,y = p.ravel()
         x = int(x)
         y = int(y)
@@ -42,7 +42,7 @@ def draw_lines(img, corners) :
 				x1,y1 = corners[i].ravel()
 				x2,y2 = corners[j].ravel()
 				red, green = compute_line(x1,y1,x2,y2,img2)
-				if red > 48 :
+				if red > 900 :
 					possible_obstacles.append([x1,y1,x2,y2])
 				#if green < 40 :
 					#free_path.append([x1,y1,x2,y2])
@@ -102,33 +102,43 @@ def real_obstacles(possible_obstacles) :
 
 	return obstacles     
 
-def obs_augmentation(img, obstacles):
+def obs_augmentation(img, obstacles, thymio_size):
+	output = img.copy()
 	for i in range (0,len(obstacles)//4):
-		x1 = obstacles[i]
-		y1 = obstacles[i+1]
-		x2 = obstacles[i+2]
-		y2 = obstacles[i+3]
+		x1 = obstacles[4*i]
+		y1 = obstacles[4*i+1]
+		x2 = obstacles[4*i+2]
+		y2 = obstacles[4*i+3]
 		print('Looking at Corner ', i )
 		if x1 > x2:
-			obstacles[i] = np.minimum(obstacles[i] + THYMIO_SIZE, img.shape[1]) #augment x1
-			obstacles[i+2] = np.maximum(obstacles[i+2] - THYMIO_SIZE, 0) #decreases x2
+			obstacles[4*i] = np.minimum(obstacles[4*i] + thymio_size, img.shape[1]) #augment x1
+			obstacles[4*i+2] = np.maximum(obstacles[4*i+2] - thymio_size, 0) #decreases x2
 		else:
-			obstacles[i] = np.maximum(obstacles[i] - THYMIO_SIZE, 0) #decreases x1
-			obstacles[i+2] = np.minimum(obstacles[i+2] + THYMIO_SIZE, img.shape[1]) #augment x2
+			obstacles[4*i] = np.maximum(obstacles[4*i] - thymio_size, 0) #decreases x1
+			obstacles[4*i+2] = np.minimum(obstacles[4*i+2] + thymio_size, img.shape[1]) #augment x2
 		if y1 > y2:
-			obstacles[i+1] = np.minimum(obstacles[i+1] + THYMIO_SIZE, img.shape[0])
-			obstacles[i+3] = np.maximum(obstacles[i+3] - THYMIO_SIZE, 0)
+			obstacles[4*i+1] = np.minimum(obstacles[4*i+1] + thymio_size, img.shape[0])
+			obstacles[4*i+3] = np.maximum(obstacles[4*i+3] - thymio_size, 0)
 		else:
-			obstacles[i+1] = np.maximum(obstacles[i+1] - THYMIO_SIZE, 0)
-			obstacles[i+3] = np.minimum(obstacles[i+3] + THYMIO_SIZE, img.shape[0])
-		x1 = obstacles[i]
-		y1 = obstacles[i+1]
-		x2 = obstacles[i+2]
-		y2 = obstacles[i+3]
-
+			obstacles[4*i+1] = np.maximum(obstacles[4*i+1] - thymio_size, 0)
+			obstacles[4*i+3] = np.minimum(obstacles[4*i+3] + thymio_size, img.shape[0])
+			
+		x1 = obstacles[4*i]
+		y1 = obstacles[4*i+1]
+		x2 = obstacles[4*i+2]
+		y2 = obstacles[4*i+3]
+		
+		print("x1", x1)
+		print("y1", y1)
+		print("x2", x2)
+		print("y2", y2)
+		
+		cv2.circle(output,(x1,y1),5,(0,0,255),-1)
+		cv2.circle(output,(x2,y2),5,(255, 0, 0),-1)
+		
 	print(obstacles)
-	red, green = compute_line(x1,y1,x2,y2,img)
-	cv2.imshow("Draw only lines that are obstacles", img)
+	#red, green = compute_line(x1,y1,x2,y2,img)
+	cv2.imshow("Augmented obstacles", output)
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
 

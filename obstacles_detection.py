@@ -32,7 +32,7 @@ def corner_detection(img):
 	#MinDistance of 80 with images taken with camera
 	maxCorners = 0 #Return all the corners detected
 	qualityLevel = 0.15 #Level of quality of corner desired - to avoid detect false corners
-	minDistance = 20 #Minimum Euclidean distance between two corners - assume a certain size of the obstacles
+	minDistance = 5 #Minimum Euclidean distance between two corners - assume a certain size of the obstacles
 	corners = cv2.goodFeaturesToTrack(gray, maxCorners, qualityLevel, minDistance)
 
 	#Draw red circle on the corners

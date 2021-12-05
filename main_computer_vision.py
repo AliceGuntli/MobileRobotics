@@ -25,7 +25,7 @@ to_be_del = []	#Index of element to delete (otherwise problem because len of cor
 
 #Store the elements to be deleted
 for i in range(len(corners)) :
-	if (np.linalg.norm(thymio-corners[i,:,:]) < 45) :
+	if (np.linalg.norm(thymio-corners[i,:,:]) < 65) :
 		to_be_del.append(i)
 
 #Sort the list reverse order to avoid problem of changing length of list
@@ -55,12 +55,16 @@ possible_obstacles = draw_lines(img, corners) 	#to be done : change this functio
 #print(possible_obstacles)
 #Return a list of elements composed of four points each, representing an entire obstacle (by checking the intersection)
 obstacles = real_obstacles(possible_obstacles)
-#print("obstacles")
-#print(obstacles)
+print("obstacles")
+print(obstacles)
+for i in range(0,len(obstacles)) :
+	obstacles[i] = obs_augmentation(img, obstacles[i], 55)
 
+print("obstacles")
+print(obstacles)
 
 #Compute the shortest path with the library
-polys = []
+first_list = []
 start_vg = vg.Point(start[0], start[1])
 goal_vg = vg.Point(goal[0], goal[1])
 for i in range(len(obstacles)) :
@@ -69,7 +73,16 @@ for i in range(len(obstacles)) :
 					  vg.Point(obstacles[i][4], obstacles[i][5]),
 					  vg.Point(obstacles[i][6], obstacles[i][7])])
 g = vg.VisGraph()
-g.build(polys)
+g.build(first_list)
+list_id = []
+print("First list", first_list)
+
+for obs in first_list :
+	for point in obs :
+		print("Point", point, g.point_in_polygon(point))
+		list_id.append(g.point_in_polygon(point))
+print("List_id", list_id)
+	
 shortest = g.shortest_path(start_vg, goal_vg)
 print(shortest)
 

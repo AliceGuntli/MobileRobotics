@@ -38,7 +38,7 @@ def start_goal(img):
 		if all((keepWidth,keepHeight, keepArea)):
 			
 			#Detect the two triangles representing the thymio from their area
-			if ((area < 650) and (area > 500)):
+			if ((area < 950) and (area > 750)):
 				thymio.append(int(cX))
 				thymio.append(int(cY))
 				#cv2.rectangle(output, (x, y), (x + w, y + h), (255, 0, 0), 3)
@@ -46,7 +46,7 @@ def start_goal(img):
 
 			
 			#Detect the goal from its area
-			if ((area < 1900) and (area > 1400)):
+			if ((area < 1500) and (area > 1300)):
 				goal = [cX, cY]
 				#cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 3)
 				cv2.circle(output, (int(cX), int(cY)), 4, (0, 255, 0), -1)
