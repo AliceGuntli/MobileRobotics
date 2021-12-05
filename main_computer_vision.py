@@ -33,7 +33,7 @@ to_be_del.sort(reverse = True)
 for i in to_be_del :
 		corners = np.delete(corners, i, 0)
 
-#Draw circles around the corners and show image (just for check)		
+#Draw circles around the corners and show image (just for check)
 output = img.copy()
 for i in corners:
 		x,y = i.ravel()
@@ -58,12 +58,16 @@ obstacles = real_obstacles(possible_obstacles)
 #print("obstacles")
 #print(obstacles)
 
+
 #Compute the shortest path with the library
 polys = []
 start_vg = vg.Point(start[0], start[1])
 goal_vg = vg.Point(goal[0], goal[1])
 for i in range(len(obstacles)) :
-		polys.append([vg.Point(obstacles[i][0], obstacles[i][1]), vg.Point(obstacles[i][2], obstacles[i][3]), vg.Point(obstacles[i][4], obstacles[i][5]), vg.Point(obstacles[i][6], obstacles[i][7])])
+		polys.append([vg.Point(obstacles[i][0], obstacles[i][1]),
+					  vg.Point(obstacles[i][2], obstacles[i][3]),
+					  vg.Point(obstacles[i][4], obstacles[i][5]),
+					  vg.Point(obstacles[i][6], obstacles[i][7])])
 g = vg.VisGraph()
 g.build(polys)
 shortest = g.shortest_path(start_vg, goal_vg)
@@ -73,7 +77,7 @@ print(shortest)
 path = img.copy()
 for point in shortest :
 	cv2.circle(path,(int(point.x),int(point.y)),5,(0,0,255),-1)
-	
+
 cv2.imshow("Path", path)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

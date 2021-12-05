@@ -63,7 +63,7 @@ def corner_detection(img):
 	h_resize = int(scale_resize*h)
 	w_resize = int(scale_resize*w)
 	imS = cv2.resize(img, (w_resize,h_resize))
-		
+
 	#Show the original image
 	cv2.imshow("Original Image", imS)
 	cv2.waitKey(0)
@@ -97,6 +97,29 @@ def corner_detection(img):
 	cv2.destroyAllWindows()
 	
 	return corners
+
+def remove_shdw(img)
+	shdw_img = img.copy()
+
+	rgb_planes = cv2.split(shdw_img)
+
+	result_planes = []
+	result_norm_planes = []
+	for plane in rgb_planes:
+		dilated_img = cv2.dilate(plane, np.ones((7,7), np.uint8))
+		bg_img = cv2.medianBlur(dilated_img, 21)
+		diff_img = 255 - cv2.absdiff(plane, bg_img)
+		norm_img = cv2.normalize(diff_img,None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8UC1)
+		result_planes.append(diff_img)
+		result_norm_planes.append(norm_img)
+
+	result = cv2.merge(result_planes)
+	result_norm = cv2.merge(result_norm_planes)
+	
+	cv2.imshow("After shadow removal", result)
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()
+	return result_norm
 
 
 	
